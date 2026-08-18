@@ -1,0 +1,36 @@
+# ##### extgen :: generated #####
+[env]
+MACOSX_DEPLOYMENT_TARGET = "11.0"
+IPHONEOS_DEPLOYMENT_TARGET = "13.0"
+TVOS_DEPLOYMENT_TARGET = "13.0"
+
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.aarch64-linux-android]
+rustflags = ["-C", "link-arg=-Wl,-z,max-page-size=16384", "-C", "link-arg=-llog", "-C", "link-arg=-landroid"]
+
+[target.armv7-linux-androideabi]
+rustflags = ["-C", "link-arg=-Wl,-z,max-page-size=16384", "-C", "link-arg=-llog", "-C", "link-arg=-landroid"]
+
+[target.x86_64-linux-android]
+rustflags = ["-C", "link-arg=-Wl,-z,max-page-size=16384", "-C", "link-arg=-llog", "-C", "link-arg=-landroid"]
+
+[target.aarch64-apple-ios]
+rustflags = ["-C", "link-arg=-miphoneos-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+
+[target.aarch64-apple-ios-sim]
+rustflags = ["-C", "link-arg=-miphonesimulator-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+
+[target.x86_64-apple-ios]
+rustflags = ["-C", "link-arg=-miphonesimulator-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+
+[target.aarch64-apple-tvos]
+rustflags = ["-C", "link-arg=-mappletvos-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+
+[target.aarch64-apple-tvos-sim]
+rustflags = ["-C", "link-arg=-mappletvsimulator-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+
+[target.x86_64-apple-tvos]
+rustflags = ["-C", "link-arg=-mappletvsimulator-version-min=13.0", "-C", "link-arg=-Wl,-install_name,@executable_path/Frameworks/SpacetimeDB_Rust.framework/SpacetimeDB_Rust"]
+

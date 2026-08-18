@@ -1,0 +1,53 @@
+{
+  "$schema": "./extgen.schema.json",
+  "root": "./",
+  "input": "spec.gmidl",
+  "profile": "Full",
+  "targets": {
+    "windows": {
+      "enabled": true,
+      "outputFolder": ".."
+    },
+    "macos": {
+      "enabled": true,
+      "outputFolder": ".."
+    },
+    "linux": {
+      "enabled": true,
+      "outputFolder": ".."
+    },
+    "android": {
+      "enabled": true,
+      "mode": "jni",
+      "outputFolder": "../AndroidSource"
+    },
+    "ios": {
+      "enabled": true,
+      "mode": "native",
+      "outputFolder": "../iOSSourceFromMac",
+      "outputSourceFolder": "../iOSSource"
+    },
+    "tvos": {
+      "enabled": true,
+      "mode": "native",
+      "outputFolder": "../tvOSSourceFromMac",
+      "outputSourceFolder": "../tvOSSource"
+    }
+  },
+  "gamemaker": {
+    "extension": {
+      "enabled": true,
+      "mode": "patch",
+      "outputFile": "../SpacetimeDB.yy",
+      "extensionName": "SpacetimeDB",
+      "extensionFileName": "SpacetimeDB.ext",
+      "patchFrameworks": true
+    },
+    "wrappers": { "enabled": false },
+    "runtime": { "enabled": false }
+  },
+  "build": {
+    "nativeBackend": "rust",
+    "emitCmake": false
+  }
+}

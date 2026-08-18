@@ -1,0 +1,43 @@
+module SpacetimeDB;
+
+/// Liveness check — returns "ok" if the native extension is loaded.
+function stdb_ping() : string;
+
+/// Client lifecycle.
+function stdb_create_client() : real;
+function stdb_destroy_client(handle: real) : real;
+function stdb_connect_simple(handle: real, uri: string, db_name_or_address: string, auth_token_or_null: string) : real;
+function stdb_disconnect(handle: real) : real;
+function stdb_reconnect_with_token(handle: real, new_token: string) : real;
+
+/// Event polling (typed GMValue trees — no JSON string round-trip).
+function stdb_poll_event(handle: real) : object;
+function stdb_poll_events_batch(handle: real) : array;
+function stdb_get_last_error(handle: real) : string;
+function stdb_debug_state(handle: real) : object;
+
+/// Connection / request config.
+function stdb_set_auto_reconnect(handle: real, enabled: real, max_attempts: real, base_delay_ms: real, max_delay_ms: real) : real;
+function stdb_set_compression_mode(handle: real, mode: string) : real;
+function stdb_set_log_level(level: real) : real;
+function stdb_set_default_request_timeout_ms(handle: real, timeout_ms: real) : real;
+function stdb_set_meta_events(handle: real, enabled: real) : real;
+function stdb_cancel_request(handle: real, request_id: real) : real;
+
+/// Schema registration (typed objects/arrays — no JSON strings).
+function stdb_register_schema(handle: real, table_name: string, schema: object) : real;
+function stdb_register_schemas(handle: real, all_schemas: object) : real;
+function stdb_register_struct_schema(handle: real, struct_name: string, schema: array) : real;
+function stdb_register_reducer_error_schema(handle: real, reducer_name: string, schema: gmval) : real;
+
+/// Subscriptions and reducers.
+function stdb_subscribe_sql(handle: real, sql: string) : real;
+function stdb_subscribe_all(handle: real, sqls: array) : real;
+function stdb_unsubscribe_sql(handle: real, query_set_id: real) : real;
+function stdb_call_reducer(handle: real, name: string, request_id: real, [type_hint=buffer] args: gmval) : real;
+function stdb_call_procedure(handle: real, name: string, request_id: real, [type_hint=buffer] args: gmval) : real;
+
+/// Native decoded row cache (subscribed tables).
+function stdb_table_count(handle: real, table_name: string) : real;
+function stdb_table_iter(handle: real, table_name: string) : array;
+function stdb_table_find(handle: real, table_name: string, pk: gmval) : object;

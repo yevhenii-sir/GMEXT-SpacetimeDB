@@ -1,0 +1,38 @@
+[package]
+name = "spacetimedb"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "CDylib FFI shim exposing SpacetimeDB GameMaker C API backed by Rust SDK"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+path = "src/lib.rs"
+
+[dependencies]
+gm_ext_wire = { path = "crates/gm_ext_wire" }
+once_cell = "1.16.0"
+parking_lot = "0.12"
+libc = "0.2"
+serde_json = "1.0"
+tokio = { version = "1.41", features = ["rt-multi-thread", "macros", "time", "sync"] }
+anyhow = "1.0"
+spacetimedb-client-api-messages = "2.8.0"
+spacetimedb-sats = "2.8.0"
+futures = "0.3"
+futures-channel = "0.3"
+bytes = "1.4"
+http = "1.0"
+log = "0.4"
+tokio-tungstenite = { version = "0.27", default-features = false, features = ["rustls-tls-webpki-roots", "url", "connect"] }
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
+brotli = "3.3"
+flate2 = "1.0"
+
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21"
+
+[profile.release]
+lto = "thin"
+strip = true
+panic = "unwind"

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"jwt_get_sub",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"jwt_get_sub",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/SpacetimeDB/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

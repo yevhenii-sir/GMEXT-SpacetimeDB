@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"spdb_encode_bsatn_to_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"spdb_encode_bsatn_to_buffer",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/SpacetimeDB/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SpacetimeDB_Wrapper",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SpacetimeDB_Wrapper",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Extensions/SpacetimeDB/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
