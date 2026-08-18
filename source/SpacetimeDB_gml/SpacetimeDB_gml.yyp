@@ -18,7 +18,6 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"generate_gml_bindings.bat","CopyToMask":-1,"filePath":"datafiles","name":"generate_gml_bindings.bat","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"generated_spacetimedb_schemas.gml","CopyToMask":-1,"filePath":"datafiles","name":"generated_spacetimedb_schemas.gml","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cargo.lock","CopyToMask":-1,"filePath":"datafiles/spacetimedb-server","name":"Cargo.lock","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Cargo.toml","CopyToMask":-1,"filePath":"datafiles/spacetimedb-server","name":"Cargo.toml","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
