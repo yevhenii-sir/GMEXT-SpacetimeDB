@@ -14,6 +14,16 @@ fn direct_buf_ptr(env: &mut JNIEnv<'_>, buf: JObject<'_>) -> Option<*mut c_char>
     env.get_direct_buffer_address(&bb).ok().map(|p| p as *mut c_char)
 }
 
+extern "system" fn jni_wrap_queue_buffer(
+    mut env: JNIEnv<'_>,
+    _class: JClass<'_>,
+    __arg_buffer: JObject<'_>,
+    __arg_buffer_length: jdouble,
+) -> jdouble {
+    let __arg_buffer_ptr = match direct_buf_ptr(&mut env, __arg_buffer) { Some(p) => p, None => return -1.0 };
+    unsafe { ffi::__EXT_NATIVE__SpacetimeDB_queue_buffer(__arg_buffer_ptr, __arg_buffer_length) }
+}
+
 extern "system" fn jni_wrap_stdb_ping(
     mut env: JNIEnv<'_>,
     _class: JClass<'_>,
@@ -342,6 +352,7 @@ extern "system" fn jni_wrap_stdb_table_find(
 #[no_mangle]
 pub extern "system" fn Java_com_gamemaker_ExtensionCore_ExtBridge_SpacetimeDBBridge_nativeRegister(mut env: JNIEnv<'_>, class: JClass<'_>) {
     let methods = [
+        NativeMethod { name: "__EXT_JNI__SpacetimeDB_queue_buffer".into(), sig: "(Ljava/nio/ByteBuffer;D)D".into(), fn_ptr: jni_wrap_queue_buffer as *mut c_void },
         NativeMethod { name: "__EXT_JNI__stdb_ping".into(), sig: "()Ljava/lang/String;".into(), fn_ptr: jni_wrap_stdb_ping as *mut c_void },
         NativeMethod { name: "__EXT_JNI__stdb_create_client".into(), sig: "()D".into(), fn_ptr: jni_wrap_stdb_create_client as *mut c_void },
         NativeMethod { name: "__EXT_JNI__stdb_destroy_client".into(), sig: "(D)D".into(), fn_ptr: jni_wrap_stdb_destroy_client as *mut c_void },

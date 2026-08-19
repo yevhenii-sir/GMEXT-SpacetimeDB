@@ -10,8 +10,8 @@
   },
   "defaultScriptType":1,
   "Folders":[
-    {"$GMFolder":"","%Name":"ExtensionCore","folderPath":"folders/Extensions/ExtensionCore.yy","name":"ExtensionCore","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Extensions","folderPath":"folders/Extensions.yy","name":"Extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"ExtensionCore","folderPath":"folders/Extensions/ExtensionCore.yy","name":"ExtensionCore","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"SpacetimeDB","folderPath":"folders/Extensions/SpacetimeDB.yy","name":"SpacetimeDB","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Example","folderPath":"folders/Extensions/SpacetimeDB/Example.yy","name":"Example","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Extensions/SpacetimeDB/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},

@@ -75,7 +75,6 @@ impl GMFunction {
         handle.queue.dispatch(ds);
     }
 
-    /// Convenience: pack f64 args into an ArrayStream and execute.
     pub fn call_f64(&self, args: &[f64]) {
         let mut as_ = ArrayStream::new();
         for v in args {

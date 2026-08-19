@@ -298,7 +298,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_register_schema(__arg_buffer: *mut c_char, 
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
             let table_name = __br.read_idl_string()?.to_string();
-            let schema = { match __br.unpack_value()? { gm_ext_wire::GMValue::Struct(__m) => __m.into_iter().map(|(k, v)| (k.to_string(), v.into_owned())).collect(), _ => return None } };
+            let schema = { match __br.unpack_value_owned()? { gm_ext_wire::GMValueOwned::Struct(__m) => __m, _ => return None } };
             Some(user::stdb_register_schema(handle, table_name, schema) as f64)
         })();
         match __wire {
@@ -321,7 +321,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_register_schemas(__arg_buffer: *mut c_char,
         let __wire: Option<f64> = (|| {
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
-            let all_schemas = { match __br.unpack_value()? { gm_ext_wire::GMValue::Struct(__m) => __m.into_iter().map(|(k, v)| (k.to_string(), v.into_owned())).collect(), _ => return None } };
+            let all_schemas = { match __br.unpack_value_owned()? { gm_ext_wire::GMValueOwned::Struct(__m) => __m, _ => return None } };
             Some(user::stdb_register_schemas(handle, all_schemas) as f64)
         })();
         match __wire {
@@ -345,7 +345,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_register_struct_schema(__arg_buffer: *mut c
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
             let struct_name = __br.read_idl_string()?.to_string();
-            let schema = { match __br.unpack_value()? { gm_ext_wire::GMValue::Array(__a) => __a.into_iter().map(|__v| __v.into_owned()).collect(), _ => return None } };
+            let schema = { match __br.unpack_value_owned()? { gm_ext_wire::GMValueOwned::Array(__a) => __a, _ => return None } };
             Some(user::stdb_register_struct_schema(handle, struct_name, schema) as f64)
         })();
         match __wire {
@@ -369,7 +369,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_register_reducer_error_schema(__arg_buffer:
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
             let reducer_name = __br.read_idl_string()?.to_string();
-            let schema = __br.unpack_value()?.into_owned();
+            let schema = __br.unpack_value_owned()?;
             Some(user::stdb_register_reducer_error_schema(handle, reducer_name, schema) as f64)
         })();
         match __wire {
@@ -407,7 +407,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_subscribe_all(__arg_buffer: *mut c_char, __
         let __wire: Option<f64> = (|| {
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
-            let sqls = { match __br.unpack_value()? { gm_ext_wire::GMValue::Array(__a) => __a.into_iter().map(|__v| __v.into_owned()).collect(), _ => return None } };
+            let sqls = { match __br.unpack_value_owned()? { gm_ext_wire::GMValueOwned::Array(__a) => __a, _ => return None } };
             Some(user::stdb_subscribe_all(handle, sqls) as f64)
         })();
         match __wire {
@@ -534,7 +534,7 @@ pub extern "C" fn __EXT_NATIVE__stdb_table_find(__arg_buffer: *mut c_char, __arg
             let mut __br = unsafe { GMBufferReader::from_raw_parts(__arg_buffer as *const u8, __arg_buffer_length as usize) };
             let handle = __br.read_f64()?;
             let table_name = __br.read_idl_string()?.to_string();
-            let pk = __br.unpack_value()?.into_owned();
+            let pk = __br.unpack_value_owned()?;
             let __result = user::stdb_table_find(handle, table_name, pk);
             let mut __bw = unsafe { GMSliceWriter::from_raw_parts(__ret_buffer as *mut u8, __ret_buffer_length as usize) };
             __result.write_to(&mut __bw)?;

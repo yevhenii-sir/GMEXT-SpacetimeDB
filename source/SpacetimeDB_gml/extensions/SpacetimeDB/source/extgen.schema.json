@@ -369,6 +369,47 @@
               "type": "boolean"
             }
           }
+        },
+        "rust": {
+          "type": "object",
+          "properties": {
+            "crateName": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "iosFrameworkName": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "iosBundleId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "macosMinVersion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "iosMinVersion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tvosMinVersion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
         }
       }
     }

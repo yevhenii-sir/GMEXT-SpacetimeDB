@@ -1,5 +1,5 @@
 /// @description Poll SpacetimeDB + keyboard reducer demo
-/// Controls: 1 spawn | 2 delete | WASD move | Space dmg | H heal | R rename | Enter chat | Del clear
+/// Controls: 1 spawn | 2 delete | WASD hold-move | Space dmg | H heal | R rename | Enter chat | Del clear
 
 spdb_poll(global.spdb_connection);
 
@@ -25,35 +25,8 @@ if (keyboard_check_pressed(ord("2"))) {
     }
 }
 
-// WASD — move last player
-if (keyboard_check_pressed(ord("A"))) {
-    var _id = __spdb_example_require_player();
-    if (!is_undefined(_id)) {
-        spdb_call_reducer(global.spdb_connection, "move_player", { id: _id, dx: -10, dy: 0 }, undefined);
-        show_debug_message("→ move_player left");
-    }
-}
-if (keyboard_check_pressed(ord("D"))) {
-    var _id = __spdb_example_require_player();
-    if (!is_undefined(_id)) {
-        spdb_call_reducer(global.spdb_connection, "move_player", { id: _id, dx: 10, dy: 0 }, undefined);
-        show_debug_message("→ move_player right");
-    }
-}
-if (keyboard_check_pressed(ord("W"))) {
-    var _id = __spdb_example_require_player();
-    if (!is_undefined(_id)) {
-        spdb_call_reducer(global.spdb_connection, "move_player", { id: _id, dx: 0, dy: -10 }, undefined);
-        show_debug_message("→ move_player up");
-    }
-}
-if (keyboard_check_pressed(ord("S"))) {
-    var _id = __spdb_example_require_player();
-    if (!is_undefined(_id)) {
-        spdb_call_reducer(global.spdb_connection, "move_player", { id: _id, dx: 0, dy: 10 }, undefined);
-        show_debug_message("→ move_player down");
-    }
-}
+// WASD — hold to move; reducer only when velocity vector changes (incl. release stop)
+__spdb_example_sync_move_velocity();
 
 // Space — damage 15
 if (keyboard_check_pressed(vk_space)) {
@@ -105,6 +78,8 @@ if (keyboard_check_pressed(vk_delete)) {
     spdb_call_reducer(global.spdb_connection, "clear_players", {}, {
         on_result: function(ev) {
             global.spdb_last_player_id = undefined;
+            global.spdb_move_vx = 0;
+            global.spdb_move_vy = 0;
             show_debug_message("clear_players done | cache=" + string(spdb_table_count(global.spdb_connection, "player")));
         }
     });

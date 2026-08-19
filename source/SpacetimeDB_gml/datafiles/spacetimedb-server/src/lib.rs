@@ -4,13 +4,18 @@
 //!   spacetime publish spdb-gmext-test-cifyi -s maincloud -p . --yes
 //!
 //! Tables:
-//!   - player: { id, name, hp, x, y }
+//!   - player: { id, name, hp, x, y, vx, vy }
 //!   - chat_message: { id, author, text }
+//!   - move_tick_timer: scheduled interval (~50ms) drives position from velocity
 //!
-//! Reducers (GML keyboard demo):
-//!   - spawn_player(name)           — Up
-//!   - delete_player(id)            — Down
-//!   - move_player(id, dx, dy)      — Left / Right / PageUp / PageDown
+//! Movement model (realtime-style):
+//!   Client holds WASD → calls `set_player_velocity` only when the input vector **changes**
+//!   (including a final `0,0` on release). Server tick integrates `x += vx`, `y += vy`.
+//!
+//! Other reducers (GML keyboard demo):
+//!   - spawn_player(name)           — 1
+//!   - delete_player(id)            — 2
+//!   - set_player_velocity(id, vx, vy) — WASD hold (edge-triggered)
 //!   - damage_player(id, amount)    — Space
 //!   - heal_player(id, amount)      — H
 //!   - rename_player(id, name)      — R
@@ -18,7 +23,13 @@
 //!   - clear_players()              — Delete
 
 use log::info;
-use spacetimedb::{reducer, table, ReducerContext, Table};
+use spacetimedb::{reducer, table, ReducerContext, ScheduleAt, Table};
+use std::time::Duration;
+
+/// Units of (x,y) applied per server move tick while velocity is non-zero.
+const MOVE_SPEED: i32 = 4;
+/// How often the server integrates positions from velocity.
+const MOVE_TICK_MS: u64 = 50;
 
 // ---------------------------------------------------------------------------
 // Tables
@@ -33,6 +44,9 @@ pub struct Player {
     hp: u32,
     x: i32,
     y: i32,
+    /// Velocity in world units per move tick (set by client input; applied in `move_tick`).
+    vx: i32,
+    vy: i32,
 }
 
 #[table(accessor = chat_message, public)]
@@ -44,11 +58,20 @@ pub struct ChatMessage {
     text: String,
 }
 
+/// Interval schedule that runs [`move_tick`].
+#[table(accessor = move_tick_timer, scheduled(move_tick))]
+pub struct MoveTickTimer {
+    #[primary_key]
+    #[auto_inc]
+    scheduled_id: u64,
+    scheduled_at: ScheduleAt,
+}
+
 // ---------------------------------------------------------------------------
 // Reducers — players
 // ---------------------------------------------------------------------------
 
-/// Insert a new player with 100 HP at the origin.
+/// Insert a new player with 100 HP at the origin (standing still).
 #[reducer]
 pub fn spawn_player(ctx: &ReducerContext, name: String) {
     info!("spawn_player: name={}", name);
@@ -58,6 +81,8 @@ pub fn spawn_player(ctx: &ReducerContext, name: String) {
         hp: 100,
         x: 0,
         y: 0,
+        vx: 0,
+        vy: 0,
     });
 }
 
@@ -71,16 +96,38 @@ pub fn delete_player(ctx: &ReducerContext, id: u64) {
     info!("delete_player: id={id} deleted");
 }
 
-/// Move a player by (dx, dy).
+/// Set movement intent. Client should call this only when WASD vector changes
+/// (press, direction change, or release → `0,0`), not every frame.
 #[reducer]
-pub fn move_player(ctx: &ReducerContext, id: u64, dx: i32, dy: i32) {
+pub fn set_player_velocity(ctx: &ReducerContext, id: u64, vx: i32, vy: i32) {
     let Some(mut row) = ctx.db.player().id().find(id) else {
-        panic!("move_player: id={id} not found");
+        panic!("set_player_velocity: id={id} not found");
     };
-    row.x = row.x.saturating_add(dx);
-    row.y = row.y.saturating_add(dy);
-    info!("move_player: id={id} -> ({}, {})", row.x, row.y);
+    let nx = vx.clamp(-MOVE_SPEED, MOVE_SPEED);
+    let ny = vy.clamp(-MOVE_SPEED, MOVE_SPEED);
+    if row.vx == nx && row.vy == ny {
+        return;
+    }
+    row.vx = nx;
+    row.vy = ny;
+    info!("set_player_velocity: id={id} v=({nx},{ny})");
     ctx.db.player().id().update(row);
+}
+
+/// Scheduled: integrate position from velocity for moving players only.
+#[reducer]
+pub fn move_tick(ctx: &ReducerContext, _timer: MoveTickTimer) {
+    let movers: Vec<Player> = ctx
+        .db
+        .player()
+        .iter()
+        .filter(|p| p.vx != 0 || p.vy != 0)
+        .collect();
+    for mut row in movers {
+        row.x = row.x.saturating_add(row.vx);
+        row.y = row.y.saturating_add(row.vy);
+        ctx.db.player().id().update(row);
+    }
 }
 
 /// Deal damage; clamps HP at 0 (does not auto-delete).
@@ -148,8 +195,15 @@ pub fn say(ctx: &ReducerContext, author: String, text: String) {
 // ---------------------------------------------------------------------------
 
 #[reducer(init)]
-pub fn init(_ctx: &ReducerContext) {
+pub fn init(ctx: &ReducerContext) {
     info!("SpacetimeDB GameMaker example module initialized");
+    if ctx.db.move_tick_timer().count() == 0 {
+        ctx.db.move_tick_timer().insert(MoveTickTimer {
+            scheduled_id: 0,
+            scheduled_at: ScheduleAt::Interval(Duration::from_millis(MOVE_TICK_MS).into()),
+        });
+        info!("move_tick scheduled every {MOVE_TICK_MS}ms");
+    }
 }
 
 #[reducer(client_connected)]

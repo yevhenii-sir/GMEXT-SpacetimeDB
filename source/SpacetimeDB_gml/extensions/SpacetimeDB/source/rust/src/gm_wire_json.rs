@@ -111,6 +111,16 @@ pub fn gmvalue_to_json(v: &GMValueOwned) -> Value {
                 .map(|(k, val)| (k.clone(), gmvalue_to_json(val)))
                 .collect(),
         ),
+        // SpacetimeDB IDL has no typed structs; keep a compact diagnostic object if one appears.
+        GMValueOwned::TypedStruct { codec_id, payload } => Value::Object({
+            let mut m = Map::new();
+            m.insert("codec_id".into(), Value::Number(Number::from(*codec_id)));
+            m.insert(
+                "payload_len".into(),
+                Value::Number(Number::from(payload.len() as u64)),
+            );
+            m
+        }),
     }
 }
 

@@ -4,7 +4,7 @@ draw_set_color(c_white);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_text(16, 16, "SpacetimeDB demo → spdb-gmext-test-cifyi");
-draw_text(16, 36, "1 spawn | 2 delete | WASD move | Space dmg | H heal | R rename | Enter chat | Del clear");
+draw_text(16, 36, "1 spawn | 2 delete | WASD hold-move | Space dmg | H heal | R rename | Enter chat | Del clear");
 
 var connected = is_struct(global.spdb_connection) && global.spdb_connection.connected;
 draw_text(16, 56, connected ? "Status: CONNECTED" : "Status: connecting…");
@@ -25,6 +25,9 @@ for (var i = 0; i < array_length(players); i++) {
     draw_set_color(c_black);
     draw_text(px + 4, py + 4, string_copy(p.name, 1, 8));
     draw_text(px + 4, py + 22, "hp " + string(p.hp));
+    if (variable_struct_exists(p, "vx")) {
+        draw_text(px + 4, py + 34, "v " + string(p.vx) + "," + string(p.vy));
+    }
 }
 
 draw_set_color(c_white);
